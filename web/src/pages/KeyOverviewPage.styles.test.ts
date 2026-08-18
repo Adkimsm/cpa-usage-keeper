@@ -25,7 +25,7 @@ describe('KeyOverviewPage layout', () => {
     expect(source).not.toContain('}, [onAuthRequired, recoverRangeBoundsConflict, t, usageRangeQuery, usageRangeQueryKey]);')
     expect(source).not.toContain('}, [onAuthRequired, realtimeWindow, t]);')
     expect(source).toContain('}, [onAuthRequired, recoverRangeBoundsConflict, usageRangeQuery, usageRangeQueryKey]);')
-    expect(source).toContain('}, [onAuthRequired, realtimeWindow]);')
+    expect(source).toContain('}, [modelDimension, onAuthRequired, realtimeWindow]);')
   })
 
   it('loads overview, Activity, and realtime data through separate requests', () => {
