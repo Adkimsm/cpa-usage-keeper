@@ -25,12 +25,6 @@ interface ResolveDisplayRealtimeOptions {
   realtimeQueryKey: string;
 }
 
-const realtimeQueryScope = (queryKey: string | null): string | null => {
-  if (queryKey === null) return null;
-  const separatorIndex = queryKey.lastIndexOf(':');
-  return separatorIndex === -1 ? queryKey : queryKey.slice(0, separatorIndex);
-};
-
 export function resolveDisplayRealtime({
   realtime,
   lastRealtimeQueryKey,
@@ -39,9 +33,6 @@ export function resolveDisplayRealtime({
 }: ResolveDisplayRealtimeOptions): OverviewRealtimeBlock | null {
   if (lastRealtimeQueryKey === realtimeQueryKey) return realtime;
   if (lastRealtimeErrorQueryKey === realtimeQueryKey) return null;
-  if (realtime && realtimeQueryScope(lastRealtimeQueryKey) === realtimeQueryScope(realtimeQueryKey)) {
-    return realtime;
-  }
   return null;
 }
 

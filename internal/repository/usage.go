@@ -1615,8 +1615,8 @@ func resolveUsageOverviewRealtimeModelKey(event entities.UsageEvent, modelDimens
 	if modelDimension != dto.ModelDimensionAlias {
 		return modelName
 	}
-	alias := normalizeUsageOverviewDimension(usageEventModelAlias(event))
-	if alias == "unknown" {
+	alias := strings.TrimSpace(usageEventModelAlias(event))
+	if alias == "" {
 		return modelName
 	}
 	return alias
@@ -2114,8 +2114,8 @@ func resolveUsageModelDimensionKey(modelName, modelAlias, modelDimension string)
 	if modelDimension != dto.ModelDimensionAlias {
 		return modelName
 	}
-	alias := normalizeUsageOverviewDimension(modelAlias)
-	if alias == "unknown" {
+	alias := strings.TrimSpace(modelAlias)
+	if alias == "" {
 		return modelName
 	}
 	return alias

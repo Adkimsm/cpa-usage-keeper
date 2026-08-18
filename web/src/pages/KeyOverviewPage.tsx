@@ -272,6 +272,7 @@ export function KeyOverviewPage({ apiKey, onAuthRequired }: KeyOverviewPageProps
     realtimeRequestControllerRef.current = controller;
     setRealtimeLoading(true);
     setRealtimeError('');
+    setRealtime(null);
     try {
       const nextRealtime = await fetchKeyOverviewRealtime({
         window: realtimeWindow,

@@ -1295,10 +1295,11 @@ export function UsagePage({ onAuthRequired }: { onAuthRequired?: () => void }) {
     }
   }, [loadAuthSessions, onAuthRequired, showTopNotice, t]);
 
-  const loadAnalysis = useCallback(async () => {
+  const loadAnalysis = useCallback(async (options: { force?: boolean } = {}) => {
     if (!usageRangeQuery.valid) return;
+    const { force = false } = options;
     const analysisCacheKey = `${usageRangeQuery.range}:${usageRangeQuery.unit ?? ''}:${usageRangeQuery.start ?? ''}:${usageRangeQuery.end ?? ''}:${selectedApiKeyId ?? ''}:${modelDimension}`;
-    const cached = analysisDimensionCacheRef.current.get(analysisCacheKey);
+    const cached = !force ? analysisDimensionCacheRef.current.get(analysisCacheKey) : undefined;
     if (cached) {
       setAnalysisData(cached);
       setAnalysisLoading(false);
@@ -1319,11 +1320,13 @@ export function UsagePage({ onAuthRequired }: { onAuthRequired?: () => void }) {
     setAnalysisLatencyData(null);
 
     await loadAnalysisSections({
-      loadCore: () => fetchAnalysis(usageRangeQuery, controller.signal, selectedApiKeyId, modelDimension),
+      loadCore: cached ? () => Promise.resolve(cached) : () => fetchAnalysis(usageRangeQuery, controller.signal, selectedApiKeyId, modelDimension),
       loadLatency: () => fetchAnalysisLatency(usageRangeQuery, controller.signal, selectedApiKeyId),
       onCoreLoaded: (response) => {
         if (analysisRequestControllerRef.current !== controller) return;
-        setAnalysisData(response);
+        if (!cached) {
+          setAnalysisData(response);
+        }
         setAnalysisLoading(false);
         analysisDimensionCacheRef.current.set(analysisCacheKey, response);
       },
@@ -1762,7 +1765,7 @@ export function UsagePage({ onAuthRequired }: { onAuthRequired?: () => void }) {
       return;
     }
     if (activeTab === 'analysis') {
-      await loadAnalysis();
+      await loadAnalysis({ force: true });
       return;
     }
     if (activeTab === 'settings') {
